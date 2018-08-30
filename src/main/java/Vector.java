@@ -9,7 +9,7 @@ public class Vector extends Line2D.Double {
 	private static final long serialVersionUID = 1L;
 	public Point2D initial, terminal, normalP1, normalP2, scalarP1, scalarP2;
 	public double x1, y1, x2, y2, slope;
-	public Vector vector, normalVector, scalarVector;
+	public Vector normalVector, scalarVector;
 
 	public Vector(Point2D initial, Point2D terminal) {
 		this.initial = initial;
@@ -20,6 +20,16 @@ public class Vector extends Line2D.Double {
 		this.y2 = terminal.getY();
 		this.slope = (y2-y1)/(x2-x1);
 		//this.vector = new Vector(initial, terminal);
+	}
+	
+	public Vector(int x1, int y1, int x2, int y2) {
+		this.initial = new Point2D.Double(x1, y1);
+		this.terminal = new Point2D.Double(x2, y2);
+		this.x1 = x1;
+		this.y1 = y1;
+		this.x2 = x2;
+		this.y2 = y2;
+		this.slope = (y2-y1)/(x2-x1);
 	}
 	
 	public double getMagnitude() {
@@ -33,16 +43,16 @@ public class Vector extends Line2D.Double {
 		return component;
 	}
 	
-	public Vector normalize(Vector vector) {
-		normalP1 = new Point2D.Double((vector.getX1() / vector.getMagnitude()), (vector.getY1() / vector.getMagnitude()));
-		normalP2 = new Point2D.Double((vector.getX2() / vector.getMagnitude()), (vector.getY2() / vector.getMagnitude()));
+	public Vector normalize() {
+		normalP1 = new Point2D.Double((x1 / Math.sqrt(Math.pow((x2-x1), 2)+Math.pow((y2-y1), 2))), (y1 / Math.sqrt(Math.pow((x2-x1), 2)+Math.pow((y2-y1), 2))));
+		normalP2 = new Point2D.Double((x2 / Math.sqrt(Math.pow((x2-x1), 2)+Math.pow((y2-y1), 2))), (y2 / Math.sqrt(Math.pow((x2-x1), 2)+Math.pow((y2-y1), 2))));
 		normalVector = new Vector(normalP1, normalP2);
 		return normalVector;
 	}
 	
-	public Vector multiplyScalar(Vector vector, double scalar) {
-		scalarP1 = new Point2D.Double((vector.getX1() * scalar), (vector.getY1() * scalar));
-		scalarP2 = new Point2D.Double((vector.getX2() * scalar), (vector.getY2() * scalar));
+	public Vector multiplyScalar(double scalar) {
+		scalarP1 = new Point2D.Double((x1 * scalar), (y1 * scalar));
+		scalarP2 = new Point2D.Double((x2 * scalar), (y2 * scalar));
 		scalarVector = new Vector(scalarP1, scalarP2);
 		return scalarVector;		
 	}
