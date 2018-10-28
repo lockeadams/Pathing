@@ -77,21 +77,22 @@ public class Path extends ArrayList<Point2D> {
 			double cuspDeltaY = (beforeDeltaY + afterDeltaY) / 2;
 			//this averages slope of the points +/- radius away from the current point and changes the current point based on that average slope
 			System.out.println("radius: " + radius);
+			int xQuad = (afterPoint.getX() > beforePoint.getX()) ? 1 : -1; //determines whether to add or subtract delta x
+			int yQuad = (afterPoint.getY() > beforePoint.getY()) ? -1 : 1; //determines whether to add or subtract delta y
 			for(int i = 1; i < 2 * radius + 1; i++) {
-				int skipCuspConst = 1; //allows us to skip changing the location of the cusp
-				if(i < radius + 1) {
-					skipCuspConst = 1;
-				} else {
-					skipCuspConst = 0;
-				}
-				int currentPointIndex = cuspIndex - radius + (i - skipCuspConst);
+				int skipCusp = (i < radius + 1) ? 1 : 0; //allows us to skip changing the location of the cusp since it will be changed seperately
+				int currentPointIndex = cuspIndex - radius + (i - skipCusp);
 				double newDeltaX = ((2 * radius - i) * beforeDeltaX + cuspDeltaX + (i - 1) * afterDeltaX) / (2 * radius);
 				double newDeltaY = ((2 * radius - i) * beforeDeltaY + cuspDeltaY + (i - 1) * afterDeltaY) / (2 * radius);
-				double newX = injectedPoints.get(currentPointIndex).getX() + newDeltaX;
-				double newY = injectedPoints.get(currentPointIndex).getY() + newDeltaY;
+				double newX = injectedPoints.get(currentPointIndex).getX() + xQuad * newDeltaX;
+				double newY = injectedPoints.get(currentPointIndex).getY() + yQuad * newDeltaY;
 				Point2D newPoint = new Point2D.Double(newX, newY);
 				smoothPoints.set(currentPointIndex, newPoint);
 			}
+			double newCuspX = cusp.getX() + xQuad * cuspDeltaX;
+			double newCuspY = cusp.getY() + yQuad * cuspDeltaY;
+			Point2D newCusp = new Point2D.Double(newCuspX, newCuspY);
+			smoothPoints.set(cuspIndex, newCusp);
 		}
 		return smoothPoints;
 	} 
